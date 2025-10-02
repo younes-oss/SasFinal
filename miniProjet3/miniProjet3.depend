@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1759414592 source:c:\users\safiy\onedrive\documents\miniprojet\tri\miniprojet3\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+
