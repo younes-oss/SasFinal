@@ -126,13 +126,16 @@ void ajouter_animal() {
     } while (!est_nom_valide(a.espece));
 
 
+    int retour;
     do {
         printf("Age : ");
-        scanf("%d", &a.age);
-        if (a.age <= 0) {
+        retour=scanf("%d", &a.age);
+
+        while (getchar()!= '\n');
+        if (a.age <= 0 || retour == 0) {
             printf(" L'age doit être supérieur a 0\n");
         }
-    } while (a.age <= 0);
+    } while (a.age <= 0 || retour == 0);
 
 
     do {
@@ -479,7 +482,8 @@ void afficher_stats() {
         printf("1. Age du plus vieux animal\n");
         printf("2. Age moyen des animaux\n");
         printf("3. Nombre total d'animaux\n");
-        printf("4. Retour au menu principal\n");
+        printf("4. Nombre le plus represente\n");
+        printf("5. Retour au menu principal\n");
         printf("Choix : ");
         scanf("%d", &choix_stat);
 
@@ -500,13 +504,66 @@ void afficher_stats() {
                 printf("Nombre total d'animaux : %d\n", nombreTtal());
                 break;
             case 4:
-                printf("Retour au menu principal.\n");
+                afficher_espece_plus_representee();
+                break;
+            case 5:printf("Retour au menu principal\n");
                 break;
             default:
                 printf("Choix invalide.\n");
         }
     } while (choix_stat != 4);
 }
+
+void afficher_espece_plus_representee() {
+    // Si aucun animal n'est encore ajouté
+    if (compteur_animaux == 0) {
+        printf("Aucun animal enregistré.\n");
+        return;
+    }
+
+    // On déclare un tableau pour stocker les espèces rencontrées
+    char especes[MAX_ANIMAUX][50];
+
+    // Un tableau parallèle pour compter combien de fois chaque espèce apparaît
+    int compteurs[MAX_ANIMAUX] = {0};
+
+    // Compte combien d'espèces différentes on a trouvées
+    int nb_especes = 0;
+
+    // Parcourir tous les animaux pour compter les espèces
+    for (int i = 0; i < compteur_animaux; i++) {
+        int trouve = 0;
+
+        // Vérifier si l'espèce actuelle est déjà enregistrée
+        for (int j = 0; j < nb_especes; j++) {
+            if (strcmp(animaux[i].espece, especes[j]) == 0) {
+                compteurs[j]++;  // Incrémenter le compteur de cette espèce
+                trouve = 1;
+                break;
+            }
+        }
+
+        // Si l'espèce n'a pas encore été vue, on l'ajoute
+        if (!trouve) {
+            strcpy(especes[nb_especes], animaux[i].espece);
+            compteurs[nb_especes] = 1;
+            nb_especes++;
+        }
+    }
+
+    // Trouver l'indice de l'espèce la plus fréquente
+    int max_index = 0;
+    for (int i = 1; i < nb_especes; i++) {
+        if (compteurs[i] > compteurs[max_index]) {
+            max_index = i;
+        }
+    }
+
+    // Affichage final
+    printf("\nL'espèce la plus représentée est : %s (%d fois)\n",
+           especes[max_index], compteurs[max_index]);
+}
+
 
 
 int main() {
